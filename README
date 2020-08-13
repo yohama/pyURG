@@ -2,9 +2,9 @@
 pyURG is a library for using Hokuyo-URG laser range sensor in Python.
 
 # How to use
-$ python
-Python 2.6.5 (r265:79063, Apr 16 2010, 13:09:56) 
-[GCC 4.4.3] on linux2
+$ python3
+Python 3.7.3 (default, Jul 25 2020, 13:03:44)
+[GCC 8.3.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import pyurg              # inport this library
 >>> urg = pyurg.UrgDevice()   # for Initializing
