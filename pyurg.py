@@ -57,20 +57,20 @@ class UrgDevice(serial.Serial):
         self.get_parameter()
         return True
 
-    def is_open(self):
-        '''If port is opening, return True.'''
-        return self.isOpen()
-
     def flush_input_buf(self):
         '''Clear input buffer.'''
         self.flushInput()
 
     def send_command(self, cmd):
         '''Send command to device.'''
-        self.write(cmd)
+        self.write(cmd.encode())
 
     def __receive_data(self):
-        return self.readlines()
+        recv_data = list()
+        recv = self.readlines()
+        for r in recv:
+            recv_data.append(r.decode())
+        return recv_data
     
     def set_scip2(self):
         '''Set SCIP2.0 protcol'''
@@ -80,7 +80,7 @@ class UrgDevice(serial.Serial):
 
     def get_version(self):
         '''Get version information.'''
-        if not self.is_open():
+        if not self.isOpen():
             return False
 
         self.flush_input_buf()
@@ -90,10 +90,11 @@ class UrgDevice(serial.Serial):
 
     def get_parameter(self):
         '''Get device parameter'''
-        if not self.is_open():
+        if not self.isOpen():
             return False
         
         self.send_command('PP\n')
+        time.sleep(0.5)
         
         get = self.__receive_data()
         
@@ -110,7 +111,7 @@ class UrgDevice(serial.Serial):
 
     def laser_on(self):
         '''Turn on the laser.'''
-        if not self.is_open():
+        if not self.isOpen():
             return False
         
         self.send_command('BM\n')
@@ -123,7 +124,7 @@ class UrgDevice(serial.Serial):
         
     def laser_off(self):
         '''Turn off the laser.'''
-        if not self.is_open():
+        if not self.isOpen():
             return False
 
         self.flush_input_buf()
@@ -210,14 +211,14 @@ class UrgDevice(serial.Serial):
 def main():
     urg = UrgDevice()
     if not urg.connect():
-        print 'Connect error'
+        print('Connect error')
         exit()
 
     for i in range(10):
         data, tm = urg.capture()
         if data == 0:
             continue
-        print len(data), tm
+        print(len(data), tm)
 
 
 
